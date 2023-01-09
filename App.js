@@ -1,12 +1,13 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, SafeAreaView} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
+import List from './components/List';
 
 const App = () => {
   return (
     <>
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <List />
+      </SafeAreaView>
       <StatusBar style="auto" />
     </>
   );
@@ -16,8 +17,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  listItem: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'lightgray',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 10,
+    paddingLeft: 110,
+  },
+  title: {
+    fontWeight: 'bold',
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: 'blue',
+    paddingTop: 20,
   },
 });
 
