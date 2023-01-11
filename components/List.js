@@ -7,19 +7,23 @@ const List = () => {
     'https://raw.githubusercontent.com/mattpe/wbma/master/docs/assets/test.json';
   const [mediaArray, setMediaArray] = useState([]);
   const loadMedia = async () => {
-    const response = await fetch(url);
-    const json = await response.json();
-    setMediaArray(json);
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      setMediaArray(json);
+    } catch (error) {
+      console.log('List, loadName', mediaArray);
+    }
   };
 
   useEffect(() => {
     loadMedia();
   }, []);
-  console.log('List, loadName', mediaArray);
 
   return (
     <FlatList
       data={mediaArray}
+      keyExtractor={(item, index) => index.toString()}
       renderItem={({item}) => <ListItem singleMedia={item} />}
     />
   );
