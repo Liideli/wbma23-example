@@ -7,7 +7,7 @@ const ListItem = ({singleMedia}) => {
     <TouchableOpacity style={styles.listItem}>
       <Image
         style={{width: 180, height: 200, margin: 10}}
-        source={{uri: item.thumbnails.w160}}
+        source={{uri: item.thumbnails?.w160}}
       ></Image>
       <View>
         <Text style={styles.title}>{item.title}</Text>
