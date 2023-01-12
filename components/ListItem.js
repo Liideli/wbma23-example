@@ -5,10 +5,12 @@ const ListItem = ({singleMedia}) => {
   const item = singleMedia;
   return (
     <TouchableOpacity style={styles.listItem}>
-      <Image
-        style={{width: 180, height: 200, margin: 10}}
-        source={{uri: item.thumbnails?.w160}}
-      ></Image>
+      <View>
+        <Image
+          style={{width: 180, height: 200, margin: 10}}
+          source={{uri: item.thumbnails?.w160}}
+        ></Image>
+      </View>
       <View>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={{fontSize: 11, width: 180}}>{item.description}</Text>
