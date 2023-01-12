@@ -1,4 +1,4 @@
-import {StyleSheet, SafeAreaView} from 'react-native';
+import {Platform, StyleSheet, SafeAreaView} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import List from './components/List';
 
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: 'blue',
-    paddingTop: 20,
+    paddingTop: Platform.OS === 'android' ? 30 : 0,
   },
 });
 
