@@ -13,7 +13,7 @@ const ListItem = ({singleMedia, navigation}) => {
     >
       <View>
         <Image
-          style={{width: 180, height: 200, margin: 10}}
+          style={styles.image}
           source={{uri: uploadsUrl + item.thumbnails?.w160}}
         ></Image>
       </View>
@@ -28,17 +28,26 @@ const ListItem = ({singleMedia, navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   listItem: {
     flex: 1,
+    display: 'flex',
     flexDirection: 'row',
-    backgroundColor: 'lightgray',
+    backgroundColor: 'darkgrey',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
     paddingRight: 30,
     paddingLeft: 30,
+    alignContent: 'space-around',
+    borderRadius: 15,
+  },
+  image: {
+    borderRadius: 10,
+    borderBottomLeftRadius: 40,
+    width: 180,
+    height: 100,
+    margin: 10,
   },
   title: {
     fontWeight: 'bold',
