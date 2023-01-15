@@ -11,46 +11,49 @@ const ListItem = ({singleMedia, navigation}) => {
         navigation.navigate('Single', item);
       }}
     >
-      <View>
+      <View style={styles.areaA}>
         <Image
           style={styles.image}
           source={{uri: uploadsUrl + item.thumbnails?.w160}}
         ></Image>
       </View>
-      <View>
+      <View style={styles.areaB}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={{fontSize: 11, width: 180}}>{item.description}</Text>
+        <Text style={styles.description}>{item.description}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   listItem: {
-    flex: 1,
-    display: 'flex',
     flexDirection: 'row',
-    backgroundColor: 'darkgrey',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    paddingRight: 30,
-    paddingLeft: 30,
-    alignContent: 'space-around',
-    borderRadius: 15,
+    alignItems: 'stretch',
+    display: 'flex',
+    backgroundColor: 'oldlace',
+    marginTop: 10,
+    marginRight: 5,
+    marginLeft: 5,
+    borderBottomLeftRadius: 40,
+    borderTopRightRadius: 40,
   },
   image: {
-    borderRadius: 10,
     borderBottomLeftRadius: 40,
-    width: 180,
-    height: 100,
-    margin: 10,
+    height: 120,
   },
   title: {
+    fontSize: 16,
     fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 14,
+  },
+  areaA: {
+    flex: 1,
+  },
+  areaB: {
+    flex: 1,
+    padding: 10,
   },
 });
 
