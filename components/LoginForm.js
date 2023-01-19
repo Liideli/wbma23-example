@@ -1,5 +1,4 @@
 import React, {useContext} from 'react';
-import PropTypes from 'prop-types';
 import {Text, Button, View, TextInput} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -73,6 +72,5 @@ const LoginForm = (props) => {
     </View>
   );
 };
-LoginForm.propTypes = {};
 
 export default LoginForm;
