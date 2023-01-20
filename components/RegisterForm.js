@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Button, View, TextInput} from 'react-native';
+import {Text, Button, View, TextInput, StyleSheet} from 'react-native';
 import {useUser} from '../hooks/ApiHooks';
 import {Controller, useForm} from 'react-hook-form';
 
@@ -40,6 +40,7 @@ const RegisterForm = (props) => {
         rules={{required: true, minLength: 3}}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
+            style={styles.textInput}
             placeholder="Username"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -57,6 +58,7 @@ const RegisterForm = (props) => {
         rules={{required: true, minLength: 5}}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
+            style={styles.textInput}
             placeholder="Password"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -72,6 +74,7 @@ const RegisterForm = (props) => {
         rules={{required: true}}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
+            style={styles.textInput}
             placeholder="Email"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -86,6 +89,7 @@ const RegisterForm = (props) => {
         rules={{minLength: 3}}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
+            style={styles.textInput}
             placeholder="Full name"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -101,5 +105,15 @@ const RegisterForm = (props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  textInput: {
+    width: 200,
+    backgroundColor: 'lightgray',
+    borderRadius: 10,
+    padding: 10,
+    margin: 1,
+  },
+});
 
 export default RegisterForm;
