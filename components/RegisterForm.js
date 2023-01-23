@@ -1,7 +1,10 @@
 import React from 'react';
-import {Text, Button, View, TextInput, StyleSheet} from 'react-native';
+import {Text, View} from 'react-native';
 import {useUser} from '../hooks/ApiHooks';
 import {Controller, useForm} from 'react-hook-form';
+import {Input} from '@rneui/themed';
+import {Button} from '@rneui/themed';
+import {Card} from '@rneui/base';
 
 const RegisterForm = (props) => {
   // const {setIsLoggedIn} = useContext(MainContext);
@@ -34,13 +37,12 @@ const RegisterForm = (props) => {
 
   return (
     <View>
-      <Text>Register Form</Text>
+      <Card.Title>Register</Card.Title>
       <Controller
         control={control}
         rules={{required: true, minLength: 3}}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.textInput}
+          <Input
             placeholder="Username"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -57,8 +59,7 @@ const RegisterForm = (props) => {
         control={control}
         rules={{required: true, minLength: 5}}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.textInput}
+          <Input
             placeholder="Password"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -73,8 +74,7 @@ const RegisterForm = (props) => {
         control={control}
         rules={{required: true}}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.textInput}
+          <Input
             placeholder="Email"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -88,8 +88,7 @@ const RegisterForm = (props) => {
         control={control}
         rules={{minLength: 3}}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.textInput}
+          <Input
             placeholder="Full name"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -101,19 +100,9 @@ const RegisterForm = (props) => {
       {errors.username?.type === 'minLength' && (
         <Text>min length is 3 characters</Text>
       )}
-      <Button title="Sign in!" onPress={handleSubmit(register)} />
+      <Button title="Register!" onPress={handleSubmit(register)} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  textInput: {
-    width: 200,
-    backgroundColor: 'lightgray',
-    borderRadius: 10,
-    padding: 10,
-    margin: 1,
-  },
-});
 
 export default RegisterForm;

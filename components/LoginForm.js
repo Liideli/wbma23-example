@@ -1,9 +1,11 @@
 import React, {useContext} from 'react';
-import {Text, Button, View, TextInput, StyleSheet} from 'react-native';
+import {Text, View} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthentication} from '../hooks/ApiHooks';
 import {Controller, useForm} from 'react-hook-form';
+import {Card, Input} from '@rneui/themed';
+import {Button} from '@rneui/themed';
 
 const LoginForm = (props) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -36,13 +38,12 @@ const LoginForm = (props) => {
 
   return (
     <View>
-      <Text>Login Form</Text>
+      <Card.Title>Login</Card.Title>
       <Controller
         control={control}
         rules={{required: true, minLength: 3}}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.textInput}
+          <Input
             placeholder="Username"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -59,8 +60,7 @@ const LoginForm = (props) => {
         control={control}
         rules={{required: true, minLength: 5}}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.textInput}
+          <Input
             placeholder="Password"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -75,15 +75,5 @@ const LoginForm = (props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  textInput: {
-    width: 200,
-    backgroundColor: 'lightgray',
-    borderRadius: 10,
-    padding: 10,
-    margin: 1,
-  },
-});
 
 export default LoginForm;
