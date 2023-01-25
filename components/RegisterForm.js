@@ -80,7 +80,8 @@ const RegisterForm = (props) => {
           },
           pattern: {
             value: /(?=.*\p{Lu})(?=.*[0-9]).{5,}/u,
-            message: 'min 5 characters, needs one number and one uppercase letter.',
+            message:
+              'min 5 characters, needs one number and one uppercase letter.',
           },
         }}
         render={({field: {onChange, onBlur, value}}) => (
