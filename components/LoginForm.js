@@ -53,10 +53,6 @@ const LoginForm = (props) => {
         )}
         name="username"
       />
-      {errors.username?.type === 'required' && <Text>is required</Text>}
-      {errors.username?.type === 'minLength' && (
-        <Text>min length is 3 characters</Text>
-      )}
       <Controller
         control={control}
         rules={{required: true, minLength: 5}}

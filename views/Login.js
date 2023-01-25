@@ -40,7 +40,7 @@ const Login = ({navigation}) => {
   return (
     <TouchableOpacity
       onPress={() => Keyboard.dismiss()}
-      style={{flex: 1}}
+      style={{padding: 16}}
       activeOpacity={1}
     >
       <KeyboardAvoidingView
