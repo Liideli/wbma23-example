@@ -48,6 +48,7 @@ const LoginForm = (props) => {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            autoCapitalize="none"
           />
         )}
         name="username"

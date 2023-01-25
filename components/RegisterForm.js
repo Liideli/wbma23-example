@@ -9,7 +9,7 @@ import {Card} from '@rneui/base';
 const RegisterForm = (props) => {
   // const {setIsLoggedIn} = useContext(MainContext);
   // const {postLogin} = useAuthentication();
-  const {postUser} = useUser();
+  const {postUser, checkUsername} = useUser();
   const {
     control,
     handleSubmit,
@@ -21,11 +21,11 @@ const RegisterForm = (props) => {
       email: '',
       full_name: '',
     },
+    mode: 'onBlur',
   });
 
   const register = async (registerData) => {
     console.log('Registering: ', registerData);
-    // const data = {username: 'roopekl', password: 'salasana123'};
     try {
       const registerResult = await postUser(registerData);
       console.log('registeration result', registerResult);
@@ -35,18 +35,25 @@ const RegisterForm = (props) => {
     }
   };
 
+  const checkUser = async (username) => {
+    const userAvailable = await checkUsername(username);
+    console.log('checkUser', userAvailable);
+    return userAvailable || 'Username is already taken';
+  };
+
   return (
     <View>
       <Card.Title>Register</Card.Title>
       <Controller
         control={control}
-        rules={{required: true, minLength: 3}}
+        rules={{required: true, minLength: 3, validate: checkUser}}
         render={({field: {onChange, onBlur, value}}) => (
           <Input
             placeholder="Username"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            autoCapitalize="none"
           />
         )}
         name="username"
@@ -79,6 +86,7 @@ const RegisterForm = (props) => {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            autoCapitalize="none"
           />
         )}
         name="email"
@@ -93,6 +101,7 @@ const RegisterForm = (props) => {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            autoCapitalize="words"
           />
         )}
         name="full_name"
