@@ -53,6 +53,7 @@ const Login = ({navigation}) => {
             {toggleForm ? 'Create an account' : 'Already have an account?'}
           </Text>
           <Button
+            type="outline"
             title={toggleForm ? 'Register' : 'Login'}
             onPress={() => {
               setToggleForm(!toggleForm);

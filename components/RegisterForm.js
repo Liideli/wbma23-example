@@ -1,10 +1,8 @@
 import React from 'react';
-import {Text, View} from 'react-native';
 import {useUser} from '../hooks/ApiHooks';
 import {Controller, useForm} from 'react-hook-form';
-import {Input} from '@rneui/base';
-import {Button} from '@rneui/base';
-import {Card} from '@rneui/base';
+import {Card, Button, Input} from '@rneui/themed';
+import {View} from 'react-native';
 
 const RegisterForm = (props) => {
   // const {setIsLoggedIn} = useContext(MainContext);
@@ -145,7 +143,6 @@ const RegisterForm = (props) => {
         )}
         name="email"
       />
-      {errors.email?.type === 'required' && <Text>is required</Text>}
       <Controller
         control={control}
         rules={{minLength: {value: 3, message: 'Must be at least 3 chars.'}}}

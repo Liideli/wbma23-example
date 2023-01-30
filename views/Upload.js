@@ -120,7 +120,6 @@ const Upload = ({navigation}) => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                autoCapitalize="none"
                 errorMessage={errors.username && errors.username.message}
               />
             )}
