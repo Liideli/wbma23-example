@@ -122,9 +122,14 @@ const Upload = ({navigation}) => {
         activeOpacity={1}
       >
         <Card>
-          <Card.Image
-            source={{uri: mediafile.uri || 'https://placekitten.com/200/300'}}
-          />
+          {mediafile.type === 'video' ? (
+            <Card.Title>Video</Card.Title>
+          ) : (
+            <Card.Image
+              source={{uri: mediafile.uri || 'https://placekitten.com/200/300'}}
+              onPress={pickFile}
+            />
+          )}
           <Controller
             control={control}
             rules={{
