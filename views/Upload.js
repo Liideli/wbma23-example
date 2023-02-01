@@ -2,13 +2,7 @@ import React, {useCallback, useContext, useState} from 'react';
 import {Button, Card, Input} from '@rneui/base';
 import PropTypes from 'prop-types';
 import {Controller, useForm} from 'react-hook-form';
-import {
-  ActivityIndicator,
-  Alert,
-  Keyboard,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import {Alert, Keyboard, ScrollView, TouchableOpacity} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
