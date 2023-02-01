@@ -27,7 +27,7 @@ const Upload = ({navigation}) => {
     handleSubmit,
     formState: {errors},
     trigger,
-    setValue,
+    reset,
   } = useForm({
     defaultValues: {
       title: '',
@@ -65,6 +65,8 @@ const Upload = ({navigation}) => {
             console.log('OK Pressed');
             // update 'update' state in context
             setUpdate(!update);
+            // reset form
+            // reset();
             // TODO: navigate to home
             navigation.navigate('Home');
           },
@@ -98,16 +100,16 @@ const Upload = ({navigation}) => {
     }
   };
 
-  const reset = () => {
+  const resetForm = () => {
     setMediaFile({});
-    setValue('title', '');
-    setValue('description', '');
+    reset();
   };
 
   useFocusEffect(
     useCallback(() => {
       return () => {
-        reset();
+        console.log('leaving');
+        resetForm();
       };
     }, [])
   );
@@ -175,7 +177,7 @@ const Upload = ({navigation}) => {
             title="Upload"
             onPress={handleSubmit(uploadFile)}
           />
-          <Button title={'Reset'} onPress={reset} type="outline" />
+          <Button title={'Reset'} onPress={resetForm} type="outline" />
           {loading && <ActivityIndicator size="large" />}
         </Card>
       </TouchableOpacity>
