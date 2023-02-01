@@ -16,7 +16,7 @@ const Single = ({route}) => {
         style={styles.image}
       />
       <Card.Title>{title}</Card.Title>
-      <Text>{time}</Text>
+      <Text>{new Date(time).toLocaleDateString('fi-FI')}</Text>
       <Text>{description}</Text>
     </Card>
   );
