@@ -131,6 +131,22 @@ const postTag = async (data, token) => {
   }
 };
 
+const modifyUser = async (data, token) => {
+  const options = {
+    method: 'put',
+    headers: {
+      'x-access-token': token,
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  };
+  try {
+    return await doFetch(baseUrl + '/users', options);
+  } catch (error) {
+    throw new Error('modifyUser' + error.message);
+  }
+};
+
 const checkUsername = async (username) => {
   try {
     return await doFetch(baseUrl + 'users/username/' + username);
@@ -150,4 +166,4 @@ const useTag = () => {
   return {getFilesByTag, postTag};
 };
 
-export {useMedia, useAuthentication, useUser, useTag};
+export {useMedia, useAuthentication, useUser, useTag, modifyUser};
