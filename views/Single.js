@@ -6,7 +6,7 @@ import {Card} from '@rneui/themed';
 import {Text} from '@rneui/themed';
 import {Video} from 'expo-av';
 import {Icon, ListItem} from '@rneui/base';
-import {useUser} from '../hooks/apiHooks';
+import {useFavourite, useUser} from '../hooks/apiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Single = ({route}) => {
@@ -19,20 +19,55 @@ const Single = ({route}) => {
     time_added: time,
     media_type: type,
     screenshot,
+    file_id: fileId,
   } = route.params;
   const video = useRef(null);
-  const {owner, setOwner} = useState({});
+  const [owner, setOwner] = useState({});
+  const [likes, setLikes] = useState([]);
+  const [userLikesIt, setUserLikesIt] = useState(false);
   const {getUserById} = useUser();
+  const {getFavouritesByFileId, postFavourite, deleteFavourite} =
+    useFavourite();
 
   const getOwner = async () => {
     const token = await AsyncStorage.getItem('userToken');
     const owner = await getUserById(userId, token);
     console.log(owner);
-    setOwner(getUserById(userId));
+    setOwner(owner);
+  };
+
+  const getLikes = async () => {
+    const likes = await getFavouritesByFileId(fileId);
+    console.log('likes', likes);
+    setLikes(likes);
+    // TODO: check if the user id is included in the 'likes' array
+    // and set the 'userLikesIt' accordingly
+  };
+
+  const likeFile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await postFavourite(fileId, token);
+      getLikes();
+    } catch (error) {
+      // console.log(error);
+      // note: you cannot like smae file multiple times
+    }
+  };
+  const dislikeFile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await deleteFavourite(fileId, token);
+      getLikes();
+    } catch (error) {
+      // console.log(error);
+      // note: you cannot like smae file multiple times
+    }
   };
 
   useEffect(() => {
     getOwner();
+    getLikes();
   }, []);
 
   return (
@@ -77,9 +112,18 @@ const Single = ({route}) => {
           </ListItem>
         )}
         <ListItem>
+          <Icon name="person" />
           <Text>
-            {owner.username} {owner.full_name}
+            {owner.username} ({owner.full_name})
           </Text>
+        </ListItem>
+        <ListItem>
+          {userLikesIt ? (
+            <Icon name="favourite" color="red" onPress={dislikeFile} />
+          ) : (
+            <Icon name="favourite-border" onPress={likeFile} />
+          )}
+          <Text>Likes: {likes.length}</Text>
         </ListItem>
       </Card>
     </ScrollView>
