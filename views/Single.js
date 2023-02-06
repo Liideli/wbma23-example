@@ -6,7 +6,7 @@ import {Card} from '@rneui/themed';
 import {Text} from '@rneui/themed';
 import {Video} from 'expo-av';
 import {Icon, ListItem} from '@rneui/base';
-import {useFavourite, useUser} from '../hooks/apiHooks';
+import {useFavourite, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Single = ({route}) => {
@@ -50,7 +50,7 @@ const Single = ({route}) => {
       await postFavourite(fileId, token);
       getLikes();
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       // note: you cannot like smae file multiple times
     }
   };
@@ -60,8 +60,8 @@ const Single = ({route}) => {
       await deleteFavourite(fileId, token);
       getLikes();
     } catch (error) {
-      // console.log(error);
-      // note: you cannot like smae file multiple times
+      console.log(error);
+      // note: you cannot like same file multiple times
     }
   };
 
@@ -119,9 +119,9 @@ const Single = ({route}) => {
         </ListItem>
         <ListItem>
           {userLikesIt ? (
-            <Icon name="favourite" color="red" onPress={dislikeFile} />
+            <Icon name="favorite" color="red" onPress={dislikeFile} />
           ) : (
-            <Icon name="favourite-border" onPress={likeFile} />
+            <Icon name="favorite-border" onPress={likeFile} />
           )}
           <Text>Likes: {likes.length}</Text>
         </ListItem>
