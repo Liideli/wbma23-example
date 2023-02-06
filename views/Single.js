@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
@@ -8,6 +8,7 @@ import {Video} from 'expo-av';
 import {Icon, ListItem} from '@rneui/base';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {MainContext} from '../contexts/MainContext';
 
 const Single = ({route}) => {
   console.log(route.params);
@@ -25,6 +26,7 @@ const Single = ({route}) => {
   const [owner, setOwner] = useState({});
   const [likes, setLikes] = useState([]);
   const [userLikesIt, setUserLikesIt] = useState(false);
+  const {user} = useContext(MainContext);
   const {getUserById} = useUser();
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
@@ -40,14 +42,21 @@ const Single = ({route}) => {
     const likes = await getFavouritesByFileId(fileId);
     console.log('likes', likes);
     setLikes(likes);
-    // TODO: check if the user id is included in the 'likes' array
+    // check if the user id is included in the 'likes' array
     // and set the 'userLikesIt' accordingly
+    for (const like of likes) {
+      if (like.user_id === user.user_id) {
+        setUserLikesIt(true);
+        break;
+      }
+    }
   };
 
   const likeFile = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       await postFavourite(fileId, token);
+      setUserLikesIt(true);
       getLikes();
     } catch (error) {
       console.log(error);
@@ -58,6 +67,7 @@ const Single = ({route}) => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       await deleteFavourite(fileId, token);
+      setUserLikesIt(false);
       getLikes();
     } catch (error) {
       console.log(error);

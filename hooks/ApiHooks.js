@@ -191,7 +191,7 @@ const useFavourite = () => {
     try {
       return await doFetch(baseUrl + 'favourites', options);
     } catch (error) {
-      throw new Error('postFavourite' + error.message);
+      throw new Error('postFavourite ' + error.message);
     }
   };
   const getFavouritesByFileId = async (fileId) => {
