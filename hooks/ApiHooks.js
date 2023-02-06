@@ -22,6 +22,7 @@ const useMedia = () => {
       // const response = await fetch(baseUrl + 'media');
       // const json = await response.json();
       const json = await useTag().getFilesByTag(appId);
+      json.reverse();
       // 2nd fetch:
       const media = await Promise.all(
         json.map(async (file) => {
@@ -113,22 +114,25 @@ const useUser = () => {
       throw new Error('postUser' + error.message);
     }
   };
-  return {getUserByToken, postUser, checkUsername};
-};
-const postTag = async (data, token) => {
-  const options = {
-    method: 'post',
-    headers: {
-      'x-access-token': token,
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify(data),
+
+  const checkUsername = async (username) => {
+    try {
+      return await doFetch(baseUrl + 'users/username/' + username);
+    } catch (error) {
+      throw new Error('checkUsername: ' + error.message);
+    }
   };
-  try {
-    return await doFetch(baseUrl + 'tags', options);
-  } catch (error) {
-    throw new Error('postTag' + error.message);
-  }
+
+  const getUserById = async (id, token) => {
+    try {
+      return await doFetch(baseUrl + 'users/' + id, {
+        headers: {'x-access-token': token},
+      });
+    } catch (error) {
+      throw new Error('getUserById', error.message);
+    }
+  };
+  return {getUserByToken, postUser, checkUsername, getUserById};
 };
 
 const modifyUser = async (data, token) => {
@@ -147,20 +151,28 @@ const modifyUser = async (data, token) => {
   }
 };
 
-const checkUsername = async (username) => {
-  try {
-    return await doFetch(baseUrl + 'users/username/' + username);
-  } catch (error) {
-    throw new Error('checkUsername: ' + error.message);
-  }
-};
-
 const useTag = () => {
   const getFilesByTag = async (tag) => {
     try {
       return await doFetch(baseUrl + 'tags/' + tag);
     } catch (error) {
       throw new Error('getFilesByTag', error.message);
+    }
+  };
+
+  const postTag = async (data, token) => {
+    const options = {
+      method: 'post',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      return await doFetch(baseUrl + 'tags', options);
+    } catch (error) {
+      throw new Error('postTag' + error.message);
     }
   };
   return {getFilesByTag, postTag};

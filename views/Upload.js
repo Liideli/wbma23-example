@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useContext, useState, useRef} from 'react';
 import {Button, Card, Input} from '@rneui/base';
 import PropTypes from 'prop-types';
 import {Controller, useForm} from 'react-hook-form';
@@ -9,9 +9,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import {useFocusEffect} from '@react-navigation/native';
 import {appId} from '../utils/variables';
+import {Video} from 'expo-av';
 
 const Upload = ({navigation}) => {
   const [mediafile, setMediaFile] = useState({});
+  const video = useRef(null);
   const [loading, setLoading] = useState(false);
   const {postMedia} = useMedia();
   const {postTag} = useTag();
@@ -117,7 +119,16 @@ const Upload = ({navigation}) => {
       >
         <Card>
           {mediafile.type === 'video' ? (
-            <Card.Title>Video</Card.Title>
+            <Video
+              ref={video}
+              source={{uri: mediafile.uri}}
+              style={{width: '100%', height: 200}}
+              resizeMode="cover"
+              useNativeControls
+              onError={(error) => {
+                console.log(error);
+              }}
+            />
           ) : (
             <Card.Image
               source={{uri: mediafile.uri || 'https://placekitten.com/200/300'}}
