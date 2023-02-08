@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card, Icon, Input, ListItem} from '@rneui/base';
+import PropTypes from 'prop-types';
 import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Button} from 'react-native';
@@ -7,7 +8,7 @@ import {MainContext} from '../contexts/MainContext';
 import {modifyUser, useTag, checkUsername} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
 
-const Profile = () => {
+const Profile = (navigation) => {
   const {getFilesByTag} = useTag();
   const {setIsLoggedIn, user, setUser} = useContext(MainContext);
   const [avatar, setAvatar] = useState('');
@@ -127,8 +128,18 @@ const Profile = () => {
         name="email"
       />
       <Button title="Edit Profile" onPress={updateProfile()} />
+      <Button
+        title="My Files"
+        onPress={() => {
+          navigation.navigate('MyFiles');
+        }}
+      />
     </Card>
   );
+};
+
+Profile.propTypes = {
+  navigation: PropTypes.object,
 };
 
 export default Profile;
