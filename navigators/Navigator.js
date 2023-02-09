@@ -10,6 +10,7 @@ import Upload from '../views/Upload';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MainContext} from '../contexts/MainContext';
 import {Icon} from '@rneui/base';
+import Modify from '../views/Modify';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -55,6 +56,7 @@ const StackScreen = () => {
           />
           <Stack.Screen name="Single" component={Single} />
           <Stack.Screen name="MyFiles" component={MyFiles} />
+          <Stack.Screen name="Modify" component={Modify} />
         </>
       ) : (
         <Stack.Screen name="Login" component={Login}></Stack.Screen>

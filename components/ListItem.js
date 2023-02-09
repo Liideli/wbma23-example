@@ -5,10 +5,33 @@ import {Avatar, ButtonGroup} from '@rneui/base';
 import {Button} from '@rneui/themed';
 import {useContext} from 'react';
 import {MainContext} from '../contexts/MainContext';
+import {Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useMedia} from '../hooks/apiHooks';
 
 const ListItem = ({singleMedia, navigation}) => {
-  const {user} = useContext(MainContext);
+  const {user, setUpdate, update} = useContext(MainContext);
+  const {deleteMedia} = useMedia();
   const item = singleMedia;
+
+  const doDelete = () => {
+    try {
+      Alert.alert('Delete', 'this file permanently', [
+        {text: 'Cancel'},
+        {
+          text: 'OK',
+          onPress: async () => {
+            const token = await AsyncStorage.getItem('userToken');
+            const response = await deleteMedia(item.file_id, token);
+            response && setUpdate(!update);
+          },
+        },
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <RNEListItem bottomDivider>
       <Avatar rounded source={{uri: uploadsUrl + item.thumbnails?.w160}} />
@@ -21,9 +44,9 @@ const ListItem = ({singleMedia, navigation}) => {
             rounded
             onPress={(index) => {
               if (index === 0) {
-                console.log('Modify pressed');
+                navigation.navigate('Modify', {file: item});
               } else {
-                console.log('Delete pressed');
+                doDelete();
               }
             }}
           />

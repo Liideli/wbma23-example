@@ -9,6 +9,7 @@ import {Icon, ListItem} from '@rneui/base';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const Single = ({route}) => {
   console.log(route.params);
@@ -75,10 +76,41 @@ const Single = ({route}) => {
     }
   };
 
+  const unlock = async () => {
+    try {
+      await ScreenOrientation.unlockAsync();
+    } catch (error) {
+      console.error('unlock', error.message);
+    }
+  };
+
+  const lock = async () => {
+    try {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      );
+    } catch (error) {
+      console.error('lock', error.message);
+    }
+  };
+
   useEffect(() => {
     getOwner();
     getLikes();
+    unlock();
+
+    return () => {
+      lock();
+    };
   }, []);
+
+  const showVideoInFullScreen = async () => {
+    try {
+      if (video) await video.presentFullscreenPlayer();
+    } catch (error) {
+      console.error('showVideoInFullScreen', error.message);
+    }
+  };
 
   return (
     <ScrollView>
@@ -117,7 +149,7 @@ const Single = ({route}) => {
           <Text>{new Date(time).toLocaleDateString('fi-FI')}</Text>
         </ListItem>
         {description && (
-          <ListItem>
+          <ListItem onPress={showVideoInFullScreen}>
             <Text>{description}</Text>
           </ListItem>
         )}

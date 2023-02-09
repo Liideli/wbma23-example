@@ -24,11 +24,7 @@ const useMedia = (myFilesOnly) => {
       let json = await useTag().getFilesByTag(appId);
       // keep users files if MyFiles
       if (myFilesOnly) {
-        json = json.filter((file) => {
-          if (file.user_id === user.user_id) {
-            return file;
-          }
-        });
+        json = json.filter((file) => file.user_id === user.user_id);
       }
       json.reverse();
       // 2nd fetch:
@@ -63,11 +59,38 @@ const useMedia = (myFilesOnly) => {
     try {
       return await doFetch(baseUrl + 'media', options);
     } catch (error) {
-      throw new Error('postUpload' + error.message);
+      throw new Error('postMedia' + error.message);
     }
   };
 
-  return {mediaArray, postMedia};
+  const deleteMedia = async (id, token) => {
+    try {
+      return await doFetch(baseUrl + 'media/' + id, {
+        headers: {'x-access-token': token},
+        method: 'delete',
+      });
+    } catch (error) {
+      throw new Error('deleteMedia', error.message);
+    }
+  };
+
+  const putMedia = async (id, data, token) => {
+    const options = {
+      method: 'put',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      return await doFetch(baseUrl + 'media/' + id, options);
+    } catch (error) {
+      throw new Error('putMedia' + error.message);
+    }
+  };
+
+  return {mediaArray, postMedia, deleteMedia, putMedia};
 };
 
 const useAuthentication = () => {
