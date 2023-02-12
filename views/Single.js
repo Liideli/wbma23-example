@@ -1,32 +1,32 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
-import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
-import {Card} from '@rneui/themed';
-import {Text} from '@rneui/themed';
+import PropTypes from 'prop-types';
+import {Text, Card, ListItem, Icon} from '@rneui/themed';
 import {Video} from 'expo-av';
-import {Icon, ListItem} from '@rneui/base';
+import {Modal, ScrollView} from 'react-native';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import {Image} from '@rneui/base';
 
 const Single = ({route}) => {
-  console.log(route.params);
+  // console.log(route.params);
   const {
     title,
     description,
-    user_id: userId,
     filename,
-    time_added: time,
+    time_added: timeAdded,
+    user_id: userId,
     media_type: type,
-    screenshot,
     file_id: fileId,
+    filesize,
   } = route.params;
   const video = useRef(null);
   const [owner, setOwner] = useState({});
   const [likes, setLikes] = useState([]);
   const [userLikesIt, setUserLikesIt] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
@@ -41,10 +41,10 @@ const Single = ({route}) => {
 
   const getLikes = async () => {
     const likes = await getFavouritesByFileId(fileId);
-    console.log('likes', likes);
+    // console.log('likes', likes, 'user', user);
     setLikes(likes);
-    // check if the user id is included in the 'likes' array
-    // and set the 'userLikesIt' accordingly
+    // check if the current user id is included in the 'likes' array and
+    // set the 'userLikesIt' state accordingly
     for (const like of likes) {
       if (like.user_id === user.user_id) {
         setUserLikesIt(true);
@@ -60,8 +60,8 @@ const Single = ({route}) => {
       setUserLikesIt(true);
       getLikes();
     } catch (error) {
-      console.log(error);
-      // note: you cannot like smae file multiple times
+      // note: you cannot like same file multiple times
+      // console.log(error);
     }
   };
   const dislikeFile = async () => {
@@ -71,8 +71,8 @@ const Single = ({route}) => {
       setUserLikesIt(false);
       getLikes();
     } catch (error) {
-      console.log(error);
       // note: you cannot like same file multiple times
+      console.log(error);
     }
   };
 
@@ -94,36 +94,45 @@ const Single = ({route}) => {
     }
   };
 
-  useEffect(() => {
-    getOwner();
-    getLikes();
-    unlock();
-
-    return () => {
-      lock();
-    };
-  }, []);
-
   const showVideoInFullScreen = async () => {
     try {
-      if (video) await video.presentFullscreenPlayer();
+      await video.current.presentFullscreenPlayer();
     } catch (error) {
       console.error('showVideoInFullScreen', error.message);
     }
   };
 
+  useEffect(() => {
+    getOwner();
+    getLikes();
+    unlock();
+
+    const orientSub = ScreenOrientation.addOrientationChangeListener((evt) => {
+      console.log('orientation', evt);
+      if (evt.orientationInfo.orientation > 2) {
+        // show video in fullscreen
+        if (video.current) showVideoInFullScreen();
+      }
+    });
+
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(orientSub);
+      lock();
+    };
+  }, []);
+
   return (
-    <ScrollView>
-      <Card>
-        <Card.Divider />
-        {type === 'image' ? (
-          <Card.Image
-            source={{uri: uploadsUrl + filename}}
-            resizeMode="cover"
-            style={styles.image}
-          />
-        ) : (
-          <ListItem>
+    <>
+      <ScrollView>
+        <Card>
+          <Card.Title>{title}</Card.Title>
+          <Card.Divider />
+          {type === 'image' ? (
+            <Card.Image
+              onPress={() => setModalVisible(true)}
+              source={{uri: uploadsUrl + filename}}
+            />
+          ) : (
             <Video
               ref={video}
               source={{uri: uploadsUrl + filename}}
@@ -134,49 +143,54 @@ const Single = ({route}) => {
                 console.log(error);
               }}
               isLooping
-              usePoster
-              posterSource={{uri: uploadsUrl + screenshot}}
             />
-          </ListItem>
-        )}
-        <Card.Divider />
-
-        <ListItem>
-          <Card.Title>{title}</Card.Title>
-        </ListItem>
-        <ListItem>
-          <Icon name="schedule" />
-          <Text>{new Date(time).toLocaleDateString('fi-FI')}</Text>
-        </ListItem>
-        {description && (
-          <ListItem onPress={showVideoInFullScreen}>
-            <Text>{description}</Text>
-          </ListItem>
-        )}
-        <ListItem>
-          <Icon name="person" />
-          <Text>
-            {owner.username} ({owner.full_name})
-          </Text>
-        </ListItem>
-        <ListItem>
-          {userLikesIt ? (
-            <Icon name="favorite" color="red" onPress={dislikeFile} />
-          ) : (
-            <Icon name="favorite-border" onPress={likeFile} />
           )}
-          <Text>Likes: {likes.length}</Text>
-        </ListItem>
-      </Card>
-    </ScrollView>
+          <Card.Divider />
+          {description && (
+            <ListItem>
+              <Text>{description}</Text>
+            </ListItem>
+          )}
+          <ListItem>
+            <Icon name="schedule" />
+            <Text>{new Date(timeAdded).toLocaleString('fi-FI')}</Text>
+            <Icon name="save" />
+            <Text>{(filesize / 1000000).toFixed(2)} MB</Text>
+          </ListItem>
+          <ListItem>
+            <Icon name="person" />
+            <Text>
+              {owner.username} ({owner.full_name})
+            </Text>
+          </ListItem>
+          <ListItem>
+            {userLikesIt ? (
+              <Icon name="favorite" color="red" onPress={dislikeFile} />
+            ) : (
+              <Icon name="favorite-border" onPress={likeFile} />
+            )}
+            <Text>Total likes: {likes.length}</Text>
+          </ListItem>
+        </Card>
+      </ScrollView>
+      <Modal
+        visible={modalVisible}
+        style={{flex: 1}}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+        supportedOrientations={['portrait', 'landscape']}
+      >
+        <Image
+          resizeMode="contain"
+          onPress={() => setModalVisible(false)}
+          style={{height: '100%'}}
+          source={{uri: uploadsUrl + filename}}
+        />
+      </Modal>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  image: {
-    height: 400,
-  },
-});
 
 Single.propTypes = {
   route: PropTypes.object,

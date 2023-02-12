@@ -8,7 +8,7 @@ import {MainContext} from '../contexts/MainContext';
 import {modifyUser, useTag, checkUsername} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
 
-const Profile = (navigation) => {
+const Profile = ({navigation}) => {
   const {getFilesByTag} = useTag();
   const {setIsLoggedIn, user, setUser} = useContext(MainContext);
   const [avatar, setAvatar] = useState('');
@@ -71,19 +71,6 @@ const Profile = (navigation) => {
         <Icon name="badge" />
         <ListItem.Title>{user.full_name}</ListItem.Title>
       </ListItem>
-      <Button
-        title="Logout!"
-        onPress={async () => {
-          console.log('Logging out!');
-          setUser({});
-          setIsLoggedIn(false);
-          try {
-            await AsyncStorage.clear();
-          } catch (error) {
-            console.warn('clearing asyncstorage failed', error);
-          }
-        }}
-      />
       <Controller
         control={control}
         rules={{
@@ -132,6 +119,19 @@ const Profile = (navigation) => {
         title="My Files"
         onPress={() => {
           navigation.navigate('MyFiles');
+        }}
+      />
+      <Button
+        title="Logout!"
+        onPress={async () => {
+          console.log('Logging out!');
+          setUser({});
+          setIsLoggedIn(false);
+          try {
+            await AsyncStorage.clear();
+          } catch (error) {
+            console.warn('clearing asyncstorage failed', error);
+          }
         }}
       />
     </Card>
